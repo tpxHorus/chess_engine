@@ -1,0 +1,149 @@
+#ifndef _CPPCHESS_BOARD_H
+#define _CPPCHESS_BOARD_H 1
+
+#include <cstdio>
+#include <string>
+#include <map>
+
+namespace chess
+{
+	typedef unsigned long long ull; 
+		struct _BaseBoardT
+		{
+			typedef unsigned long long _BitboardT;
+			_BitboardT __attribute__((packed))
+				all,
+				black,
+				white,
+				pawn,
+				knight,
+				bishop,
+				rook,
+				queen,
+				king;
+			void
+			mask(_BitboardT mask)
+			{
+	for (size_t _offset = 0; _offset < sizeof(_BaseBoardT) / sizeof(_BitboardT); _offset++)
+		*(&all+_offset) &= mask; 
+			}
+		};
+
+
+		class BaseBoard
+		{
+			typedef unsigned long long _BitboardT;
+			
+			private:
+				std::string _fen;
+				_BaseBoardT _base_board;
+
+			public:
+				BaseBoard(const std::string fen)
+				{
+	_fen = fen;
+	this->set_position(fen);
+				}
+
+				void
+				set_position(const std::string fen)
+				{
+	std::map<char, size_t> _char_to_offset = {{'p', 0},
+		{'n', 1}, {'b', 2}, {'r', 3}, {'q', 4}, {'k', 5}};
+
+	size_t split_index = fen.find(" ");
+	ull p = 1ULL;
+
+	for (char ch: fen.substr(0, split_index))
+	{
+		if (_char_to_offset.count(tolower(ch)))
+		{
+			*(&_base_board.pawn+_char_to_offset[tolower(ch)]) |= p;
+			if (islower(ch))
+				_base_board.black |= p;
+			else
+				_base_board.white |= p;
+			_base_board.all |= p;
+			printf("%c %llu\n", ch, p);
+			p <<= 1;
+		} else if (isdigit(ch)) 
+		{
+			p <<= (int)(ch-'0');
+		}
+	}
+				}
+
+				_BaseBoardT
+				get_all() const 
+				{
+	return _base_board;
+				}
+
+				_BaseBoardT
+				get_white() const 
+				{
+	_BaseBoardT _bb(_base_board);
+	_bb.mask(_base_board.white); 
+	return _bb;
+				}
+
+				_BaseBoardT
+				get_black() const 
+				{
+	_BaseBoardT _bb(_base_board);
+	_bb.mask(_base_board.black); 
+	return _bb;
+				}
+
+				_BaseBoardT
+				get_pawn() const 
+				{
+	_BaseBoardT _bb(_base_board);
+	_bb.mask(_base_board.pawn); 
+	return _bb;
+				}
+
+				_BaseBoardT
+				get_knight() const 
+				{
+	_BaseBoardT _bb(_base_board);
+	_bb.mask(_base_board.knight); 
+	return _bb;
+				}
+
+				_BaseBoardT
+				get_bishop() const 
+				{
+	_BaseBoardT _bb(_base_board);
+	_bb.mask(_base_board.bishop); 
+	return _bb;
+				}
+
+				_BaseBoardT
+				get_rook() const 
+				{
+	_BaseBoardT _bb(_base_board);
+	_bb.mask(_base_board.rook); 
+	return _bb;
+				}
+
+				_BaseBoardT
+				get_queen() const 
+				{
+	_BaseBoardT _bb(_base_board);
+	_bb.mask(_base_board.queen); 
+	return _bb;
+				}
+
+				_BaseBoardT
+				get_king() const 
+				{
+	_BaseBoardT _bb(_base_board);
+	_bb.mask(_base_board.king); 
+	return _bb;
+				}
+		};
+}
+
+
+#endif
