@@ -48,9 +48,10 @@ namespace chess
 				void
 				set_position(const std::string fen)
 				{
-	std::map<char, size_t> _char_to_offset = {{'p', 0},
+	std::map<char, uint8_t> _char_to_offset = {{'p', 0},
 		{'n', 1}, {'b', 2}, {'r', 3}, {'q', 4}, {'k', 5}};
 
+	_base_board = {};
 	size_t split_index = fen.find(" ");
 	ull p = 1ULL;
 
@@ -64,12 +65,9 @@ namespace chess
 			else
 				_base_board.white |= p;
 			_base_board.all |= p;
-			printf("%c %llu\n", ch, p);
 			p <<= 1;
 		} else if (isdigit(ch)) 
-		{
-			p <<= (int)(ch-'0');
-		}
+			p <<= (ch-'0');
 	}
 				}
 
@@ -82,65 +80,65 @@ namespace chess
 				_BaseBoardT
 				get_white() const 
 				{
-	_BaseBoardT _bb(_base_board);
-	_bb.mask(_base_board.white); 
-	return _bb;
+	_BaseBoardT bb(_base_board);
+	bb.mask(_base_board.white); 
+	return bb;
 				}
 
 				_BaseBoardT
 				get_black() const 
 				{
-	_BaseBoardT _bb(_base_board);
-	_bb.mask(_base_board.black); 
-	return _bb;
+	_BaseBoardT bb(_base_board);
+	bb.mask(_base_board.black); 
+	return bb;
 				}
 
 				_BaseBoardT
 				get_pawn() const 
 				{
-	_BaseBoardT _bb(_base_board);
-	_bb.mask(_base_board.pawn); 
-	return _bb;
+	_BaseBoardT bb(_base_board);
+	bb.mask(_base_board.pawn); 
+	return bb;
 				}
 
 				_BaseBoardT
 				get_knight() const 
 				{
-	_BaseBoardT _bb(_base_board);
-	_bb.mask(_base_board.knight); 
-	return _bb;
+	_BaseBoardT bb(_base_board);
+	bb.mask(_base_board.knight); 
+	return bb;
 				}
 
 				_BaseBoardT
 				get_bishop() const 
 				{
-	_BaseBoardT _bb(_base_board);
-	_bb.mask(_base_board.bishop); 
-	return _bb;
+	_BaseBoardT bb(_base_board);
+	bb.mask(_base_board.bishop); 
+	return bb;
 				}
 
 				_BaseBoardT
 				get_rook() const 
 				{
-	_BaseBoardT _bb(_base_board);
-	_bb.mask(_base_board.rook); 
-	return _bb;
+	_BaseBoardT bb(_base_board);
+	bb.mask(_base_board.rook); 
+	return bb;
 				}
 
 				_BaseBoardT
 				get_queen() const 
 				{
-	_BaseBoardT _bb(_base_board);
-	_bb.mask(_base_board.queen); 
-	return _bb;
+	_BaseBoardT bb(_base_board);
+	bb.mask(_base_board.queen); 
+	return bb;
 				}
 
 				_BaseBoardT
 				get_king() const 
 				{
-	_BaseBoardT _bb(_base_board);
-	_bb.mask(_base_board.king); 
-	return _bb;
+	_BaseBoardT bb(_base_board);
+	bb.mask(_base_board.king); 
+	return bb;
 				}
 		};
 }
